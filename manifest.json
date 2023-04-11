@@ -1,0 +1,44 @@
+{
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "manifest_version": 3,
+  "name": "GoPT",
+  "content_scripts": [
+    {
+      "matches": ["*://medium.com/*"],
+      "js": ["js/jquery-3.6.4.min.js","content.js","medium/content_medium.js", "js/popper.js"],
+      "css": ["css/brands.css", "css/fontawesome.css", "css/solid.css", "css/gpt_content.css", "css/bootstrap.min.css",
+        "css/bootstrap-icons.css", "css/key.css", "css/modals.css", "css/popover.min.css"]
+    },
+    {
+      "matches": ["*://*.linkedin.com/*"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","content.js","linkedin/content_linkedin.js", "js/bootstrap.bundle.min.js", "js/bootstrap.min.js"],
+      "css": ["css/brands.css", "css/fontawesome.css", "css/solid.css", "css/gpt_content.css", "css/bootstrap.min.css",
+        "css/bootstrap-icons.css", "css/key.css", "css/modals.css", "css/popover.min.css"]
+    }
+  ],
+  "permissions": [
+    "scripting",
+    "storage",
+    "activeTab",
+    "tabs",
+    "management",
+    "declarativeContent",
+    "webNavigation",
+    "webRequest"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "/images/*", "/css/*", "/svgs/*", "/webfonts/*", "/bootstrap-icons-1.10.3/*", "/pages/*", "/js/popper.js"],
+      "matches": [ "*://*/*" ]
+    }
+  ],
+  "action": {
+    "browser_style": true,
+    "default_title": "GPT?",
+    "default_popup": "popup.html"
+  },
+  "version": "0.001"
+}

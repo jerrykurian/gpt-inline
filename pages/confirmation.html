@@ -1,0 +1,33 @@
+<div class="gpt-confirmation-modal" role="dialog" id="gpt-confirmation-details" style="position: relative">
+    <div class="modal-dialog" style="max-width: fit-content">
+        <div class="gpt-confirmation-modal-content modal-content rounded-4 shadow">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5">Completion Response</h1>
+                <span id="gpt-response-progress" class="spinner-border spinner-border-sm" role="status" style="display: none" aria-hidden="true"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0">
+                <p id="gpt-response-text"></p>
+            </div>
+            <form class="form-inline">
+                <div class="col-auto ms-1 my-1 float-end">
+                    <label class="my-1 mr-2" for="gpt-engines">Engines</label>
+                    <select class="custom-select mr-sm-2" name="engines" id="gpt-engines">
+                        <option value="">--Please choose an engine--</option>
+                    </select>
+                </div>
+                <div class="col-auto ms-1 my-1 float-end">
+                    <label class="my-1 mr-2" for="gpt-temperatures">Creativity Level</label>
+                    <select  class="custom-select mr-sm-2" name="temperature" id="gpt-temperatures">
+                        <option value="">--Please set GPT creativity--</option>
+                    </select>
+                </div>
+            </form>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-lg btn-primary" id="gpt-confirmation-accept">Accept</button>
+                <button type="button" class="btn btn-lg btn-secondary" id="gpt-confirmation-retry">Ask Again</button>
+            </div>
+        </div>
+    </div>
+</div>
