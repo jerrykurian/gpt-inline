@@ -1,0 +1,44 @@
+ <!-- Button trigger modal -->
+ <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalId">
+     Launch
+ </button>
+
+ <!-- Modal -->
+ <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+     <div style="position: absolute; right: 0; width: 100%;" class="modal-dialog" role="document">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="modalTitleId">Completion Response</h5>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             <div class="modal-body">
+                 <div class="container-fluid">
+                     Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos cupiditate veritatis autem
+                     repellendus voluptatem, sequi sint amet id, sed suscipit reiciendis numquam praesentium cumque
+                     iusto doloremque, fugiat obcaecati vel saepe dolore incidunt impedit repellat? Quaerat corporis
+                     accusantium tempora mollitia iusto, maiores repudiandae. Magni commodi ea quos architecto quia
+                     ab aspernatur.
+
+                 </div>
+             </div>
+             <form style="display: flex; flex-direction: column; padding: 1.5rem;" class="form-inline">
+                 <div class="col-auto ms-1 my-1 float-end">
+                     <label class="my-1 mr-2" for="gpt-engines">Enginees Select</label>
+                     <select class="custom-select mr-sm-2" name="engines" id="gpt-engines">
+                         <option value="">--Please choose an engine--</option>
+                     </select>
+                 </div>
+                 <div class="col-auto ms-1 my-1 float-end">
+                     <label class="my-1 mr-2" for="gpt-temperatures">Creativity Level</label>
+                     <select class="custom-select mr-sm-2" name="temperature" id="gpt-temperatures">
+                         <option value="">--Please set GPT creativity--</option>
+                     </select>
+                 </div>
+             </form>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-primary">Accept</button>
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ask Again</button>
+             </div>
+         </div>
+     </div>
+ </div>
