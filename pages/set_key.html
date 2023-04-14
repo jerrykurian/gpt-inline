@@ -1,23 +1,35 @@
-<div id="gpt-key" class="gpt-modal modal-sheet position-top position-right bg-body-secondary" role="dialog" style="display: block">
+<div id="gpt-key" class="gpt-modal modal-sheet position-top position-right bg-body-secondary" role="dialog"
+    style="display: block">
     <div class="modal-dialog" role="document">
         <div class="modal-content rounded-4 shadow">
             <div class="modal-header p-5 pb-4 border-bottom-0">
-                <h1>GPT - Save your OpenAI Key</h1>
-                <button id="gpt-key-close" type="button" class="btn-close" data-bs-dismiss="modal" onclick="document.getElementById('gpt-key').style.display = 'none'" aria-label="Close"></button>
+                <h1 style="font-size: calc(1.175rem + 1.5vw);margin-top: 0px;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                line-height: 1.2; color: black;">GPT - Save your OpenAI Key</h1>
+                <button id="gpt-key-close" type="button" class="btn-close" data-bs-dismiss="modal"
+                    onclick="document.getElementById('gpt-key').style.display = 'none'" aria-label="Close"></button>
             </div>
 
             <div class="modal-body p-5 pt-0">
                 <form class="">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control rounded-3" id="gpt-key-value" placeholder="sk-dadsad***dasdsa" required>
-                        <label for="gpt-key-value">API Key</label>
-                    </div>
-                    <button id="gpt-key-submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button">Save</button>
-                    <script>
+                    <div style="margin-bottom: 1rem !important; position: relative;" class="form-floating mb-3">
+                        <input style="border-radius: 0.3rem !important; border: 2px solid black;" type="text"
+                            class="form-control rounded-3" id="gpt-key-value" placeholder="enter API Key" required>
+                        <label style="color: black; margin: 0" for="gpt-key-value">API Key</label>
 
-                    </script>
-                    <small class="text-body-secondary">Your key is safe and will not be shared with anyone. It will be stored in your local machine.</small>
-                    <small class="text-body-secondary"><a target="_blank"  href="https://platform.openai.com/account/api-keys">Get your API key from Open AI dashboard.</a> </small>
+                    </div>
+
+                    <button id="gpt-key-submit" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+                        type="button">Save</button>
+                    <small style="font-size: 0.875em;
+                color: black" class="text-body-secondary">Your key is safe and will not be shared with anyone. It will
+                        be stored in your local machine.</small>
+                    <small style="font-size: 0.875em;
+                    color: rgb(13, 110, 253);
+    text-decoration: underline;" class="text-body-secondary"><a target="_blank"
+                            href="https://platform.openai.com/account/api-keys">Get your API key from Open AI
+                            dashboard.</a> </small>
                 </form>
             </div>
         </div>
