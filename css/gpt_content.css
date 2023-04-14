@@ -48,9 +48,6 @@
 /* progress 1 */
 gpt-progress .loading-bar {
   position: relative;
-    position: relative;
-    height: 100%;
-    width: 100%;
 }
 
 gpt-progress span {
@@ -90,15 +87,29 @@ gpt-progress span:after {
   overflow: hidden;
 }
 
-gpt-progress .loading-bar > span:after, .animate > span > span {
-  animation: load 1s infinite;
-}
+
 
 @keyframes load {
   0% {
     background-position: 0 0;
   }
   100% {
-    background-position: 50px 50px;
+    background-position: 0px 50px;
   }
+}
+
+.gpt-highlight-border {
+    border-left: 5px solid;
+}
+.gpt-ready{
+    border-left-color: rgb(69 90 3);
+}
+
+.gpt-animate {
+    border-left-color: orange;
+    animation: load 1s infinite;
+}
+
+.gpt-error {
+    border-left-color: red;
 }
