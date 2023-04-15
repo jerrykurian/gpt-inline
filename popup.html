@@ -82,6 +82,12 @@
       .bd-mode-toggle {
         z-index: 1500;
       }
+      .label-danger{
+        color: red;
+      }
+      .label-success{
+        color: blue;
+      }
     </style>
 
 
@@ -100,7 +106,8 @@
 
             <div class="modal-body p-5 pt-0">
                 <form class="">
-                    <label id="gpt-key-success" class="success" style="display: none">Key Saved</label>
+                    <span id="gpt-key-success" class = "label label-success" style="display: none">API Key Saved</span>
+                    <span id="gpt-key-failure" class = "label label-danger" style="display: none">Unable to save key. Ensure the key is valid</span>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-3" id="gpt-key-value" placeholder="sk-dadsad" required>
                         <label for="gpt-key-value">API Key</label>
@@ -111,7 +118,7 @@
                     <p class="text-body-secondary"><a target="_blank"  href="https://platform.openai.com/account/api-keys">Get your API key from Open AI dashboard.</a> </p>
                     <hr class="my-4">
                     <h2 class="fs-5 fw-bold mb-3">For support or feedback</h2>
-                    <a href="mailto:support@learnym.com" target="_blank" class="btn btn-primary">Email Us</a>
+                    <a href="https://www.ainotemaker/support" target="_blank" class="btn btn-primary">Contact</a>
 
                 </form>
             </div>

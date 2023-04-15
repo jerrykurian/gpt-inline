@@ -27,6 +27,9 @@
       "css": [ "css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
     }
   ],
+  "icons": {
+    "128": "img/icon.png"
+  },
   "permissions": [
     "storage"
   ],
