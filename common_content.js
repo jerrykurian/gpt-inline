@@ -7,9 +7,9 @@ async function handleTextEditor(targetTextEditor) {
     let context = ''
     let prompt = targetTextEditor.querySelectorAll(editableType).forEach(function(e){
         // add a check to see if the text contains "prompt:"
-        let promptHighlighter = document.getElementById('gpt-completion-progress');
+        let promptHighlighter = document.getElementsByClassName('gpt-highlight-border');
         let currentTextHasPrompt = $(`${editor}`)[0].innerText.toLowerCase().includes("prompt:");
-        if(promptHighlighter===null && currentTextHasPrompt){
+        if((promptHighlighter===null || promptHighlighter.length===0) && currentTextHasPrompt){
             updatePromptText(e)
         }else{
             // add the text to the context
@@ -23,6 +23,7 @@ async function handleTextEditor(targetTextEditor) {
 
 function loadObserver() {
     // create a jquery css selector for identifying a node that has contenteditable="true"
+    // DOMCharacterDataModified
     $(document).on("DOMSubtreeModified", `${editor}`,
          function () {
             handleTextEditor(this);
@@ -58,34 +59,9 @@ function updatePromptText(target){
         let tNode = textNodesUnder(target)
         if(tNode !== null){
             let pElement = tNode.parentNode;
-            pElement.classList.add('gpt-highlight-border');
             ready(pElement);
         }
     }
-
-    /*let textNodes = textNodesUnder(pElement);
-    textNodes.forEach((textNode) => {
-        let startRange = document.createRange();
-        startRange.setStart(textNode, 0);
-        startRange.setEnd(textNode, 0);
-        let startRangeRect = startRange.getClientRects()[0];
-
-        let text = textNode.textContent;
-        let startPositions = getIndicesOf('prompt:', text.toLowerCase(), false);
-        startPositions.forEach((startPos, index) => {
-            let range = document.createRange();
-            range.setStart(textNode, startPos);
-            range.setEnd(textNode, startPos + 7);
-            rectList = range.getClientRects();
-            let rectElem = rectList[0];
-            if($('gpt-helper')[0] === undefined){
-                let gptHelper = document.createElement("gpt-helper");
-                // append gptHelper as a child of the .ql-editor element
-                $(`${editorRoot}`)[0].appendChild(gptHelper);
-            }
-            addDivElems(startRangeRect, rectElem, index);
-        })
-    })*/
 }
 function setPromptResponse(contextText, target){
     let pElement = target;
@@ -94,14 +70,14 @@ function setPromptResponse(contextText, target){
         if(status === "success"){
            // add the message to the text editor
            let finalText = `${preText} ${message}`;
-           pElement.innerText = finalText;
+           pElement.innerHTML = finalText;
            removeHelper(target);
         }else{
            // showApiKeyModal();
            let tNode = textNodesUnder(target)
            if(tNode !== null){
                 error(tNode.parentNode);
-                showErrorModal();
+                // showErrorModal();
            }
            // removeHelper();
         }
@@ -140,7 +116,6 @@ class GPTHelper extends HTMLElement {
     constructor() {
         // Attach this element to the shadow dom
         super();
-        // this.attachShadow({mode: 'open'});
         // Add inert html to the shadow dom
         this.innerHTML = `
             <div class="gpt-helper" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: auto;">
@@ -189,6 +164,10 @@ function removeHelper(target){
 }
 
 function ready(target){
+    // check if target class list contains gpt-highlight-border
+    if(!target.classList.contains('gpt-highlight-border')){
+        target.classList.add('gpt-highlight-border');
+    }
     // check if target class list contains gpt-animate
     if(!target.classList.contains('gpt-ready')){
         target.classList.add('gpt-ready');
@@ -203,6 +182,10 @@ function ready(target){
     }
 }
 function progress(target){
+    // check if target class list contains gpt-highlight-border
+    if(!target.classList.contains('gpt-highlight-border')){
+        target.classList.add('gpt-highlight-border');
+    }
     // check if target class list contains gpt-animate
     if(!target.classList.contains('gpt-animate')){
         target.classList.add('gpt-animate');
@@ -217,6 +200,10 @@ function progress(target){
     }
 }
 function error(target){
+    // check if target class list contains gpt-highlight-border
+    if(!target.classList.contains('gpt-highlight-border')){
+        target.classList.add('gpt-highlight-border');
+    }
     // check if target class list contains gpt-animate
     if(!target.classList.contains('gpt-error')){
         target.classList.add('gpt-error');

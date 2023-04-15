@@ -4,7 +4,7 @@
     "type": "module"
   },
   "manifest_version": 3,
-  "name": "GoPT",
+  "name": "AI NoteMaker",
   "content_scripts": [
     {
       "matches": ["*://medium.com/*"],
@@ -20,17 +20,15 @@
       "matches": ["*://*.twitter.com/*"],
       "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js", "twitter/content.js"],
       "css": [ "css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
+    },
+    {
+      "matches": ["*://*.reddit.com/*"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js", "reddit/content.js"],
+      "css": [ "css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
     }
   ],
   "permissions": [
-    "scripting",
-    "storage",
-    "activeTab",
-    "tabs",
-    "management",
-    "declarativeContent",
-    "webNavigation",
-    "webRequest"
+    "storage"
   ],
   "web_accessible_resources": [
     {
@@ -40,7 +38,7 @@
   ],
   "action": {
     "browser_style": true,
-    "default_title": "GPT?",
+    "default_title": "AI NoteMaker",
     "default_popup": "popup.html"
   },
   "version": "0.001"

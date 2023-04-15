@@ -20,22 +20,17 @@ loadApiKey((key)=>{
 });
 // Add a function promptGenerator that handles the click event and calls openAi api to pass the prompt and generate response
 function promptCompleter(context, prompt, fn){
-    callback = fn;
-    loadApiKey((key)=>{
-        currentContext = context;
-        currentPrompt = prompt;
-        /*handleCompletionResponse({status: "success",
-            completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam,
-                when the Dutch East India Company began trading shares of stock. This was the first time that investors
-                could buy and sell shares of a company, and it marked the beginning of the modern stock market.
-                In the 1700s, the London Stock Exchange was established, and it quickly became the largest stock exchange in the world.
-                In the 1800s, the New York Stock Exchange was founded, and it quickly became the most important stock exchange in the United States.
-                By the early 1900s, stock exchanges had been established in many countries around the world, and the stock market had become a global phenomenon.
-                Today, the stock market is an integral part of the global economy,
-                and it provides investors with the opportunity to buy and sell shares of companies from all over the world.`});*/
-        chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": key,
-           properties: {'temperature': temperature, 'engine': openai_engine, 'max_tokens': max_tokens}});
-    });
+    if(callback === null){
+        callback = fn;
+        loadApiKey((key)=>{
+            currentContext = context;
+            currentPrompt = prompt;
+            /*handleCompletionResponse({status: "success",
+                completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam`});*/
+            chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": key,
+               properties: {'temperature': temperature, 'engine': openai_engine, 'max_tokens': max_tokens}});
+        });
+    }
 }
 
 // Add a runtime listener to handle the response from the background
@@ -62,13 +57,13 @@ function handleListModelsResponse(response){
 // if the response is success then add the completion to the text editor
 // if the response is error then log the error message to console
 function handleCompletionResponse(response){
-    $('#gpt-response-progress').show();
     if(response.status === "success"){
         callback('success', response.completion);
         // showConfirmation(response.completion);
     }else{
         callback('error', response.message);
     }
+    callback = null;
 }
 
 // Add a function that checks if apiKey is stored in the local storage
@@ -113,7 +108,7 @@ function saveKey(){
     });
 }
 
-function showConfirmation(completion){
+/*function showConfirmation(completion){
     fetch(chrome.runtime.getURL('/pages/confirmation.html')).then(r => r.text()).then(html => {
       if($('#gpt-confirmation-modal').length > 0) $('#gpt-confirmation-modal').remove();
       let divTarget = document.createElement('div');
@@ -135,7 +130,7 @@ function showConfirmation(completion){
          retry();
       });
   })
-}
+}*/
 
 // add a function that will create options out of models and add them to the select element ID gpt-engines
 function addModelsToSelect(){
