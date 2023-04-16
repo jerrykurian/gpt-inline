@@ -9,33 +9,32 @@ let openai_engine = "text-davinci-003"
 let temperature = 0.2;
 let max_tokens = 1000;
 
-function loadOpenAiModels(){
-    loadApiKey((key)=>{
-        chrome.runtime.sendMessage({ "type": "List Models", "apiKey": key });
-    });
-}
-
 loadApiKey((key)=>{
     apiKey = key;
 });
+
+function loadOpenAiModels(){
+   chrome.storage.local.get("gptEngine", function (data) {
+     let engine = data.gptEngine;
+     if(engine !== undefined){
+          openai_engine = engine;
+     }
+   });
+}
+
 // Add a function promptGenerator that handles the click event and calls openAi api to pass the prompt and generate response
 function promptCompleter(context, prompt, fn){
-    callback = fn;
-    loadApiKey((key)=>{
-        currentContext = context;
-        currentPrompt = prompt;
-        /*handleCompletionResponse({status: "success",
-            completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam,
-                when the Dutch East India Company began trading shares of stock. This was the first time that investors
-                could buy and sell shares of a company, and it marked the beginning of the modern stock market.
-                In the 1700s, the London Stock Exchange was established, and it quickly became the largest stock exchange in the world.
-                In the 1800s, the New York Stock Exchange was founded, and it quickly became the most important stock exchange in the United States.
-                By the early 1900s, stock exchanges had been established in many countries around the world, and the stock market had become a global phenomenon.
-                Today, the stock market is an integral part of the global economy,
-                and it provides investors with the opportunity to buy and sell shares of companies from all over the world.`});*/
-        chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": key,
-           properties: {'temperature': temperature, 'engine': openai_engine, 'max_tokens': max_tokens}});
-    });
+    if(callback === null){
+        callback = fn;
+        loadApiKey((key)=>{
+            currentContext = context;
+            currentPrompt = prompt;
+            /*handleCompletionResponse({status: "success",
+                completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam`});*/
+            chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": key,
+               properties: {'temperature': temperature, 'engine': openai_engine, 'max_tokens': max_tokens}});
+        });
+    }
 }
 
 // Add a runtime listener to handle the response from the background
@@ -62,13 +61,13 @@ function handleListModelsResponse(response){
 // if the response is success then add the completion to the text editor
 // if the response is error then log the error message to console
 function handleCompletionResponse(response){
-    $('#gpt-response-progress').show();
     if(response.status === "success"){
         callback('success', response.completion);
         // showConfirmation(response.completion);
     }else{
         callback('error', response.message);
     }
+    callback = null;
 }
 
 // Add a function that checks if apiKey is stored in the local storage
@@ -113,7 +112,7 @@ function saveKey(){
     });
 }
 
-function showConfirmation(completion){
+/*function showConfirmation(completion){
     fetch(chrome.runtime.getURL('/pages/confirmation.html')).then(r => r.text()).then(html => {
       if($('#gpt-confirmation-modal').length > 0) $('#gpt-confirmation-modal').remove();
       let divTarget = document.createElement('div');
@@ -135,23 +134,9 @@ function showConfirmation(completion){
          retry();
       });
   })
-}
+}*/
 
-// add a function that will create options out of models and add them to the select element ID gpt-engines
-function addModelsToSelect(){
-    if(models !== null){
-        let select = document.getElementById('gpt-engines');
-        models.forEach((model)=>{
-            let option = document.createElement("option");
-            option.text = model.id;
-            option.value = model.id;
-            if(model.id === openai_engine){
-                option.selected = true;
-            }
-            select.add(option);
-        });
-    }
-}
+
 // add a function that will create options of temperatures
 function addTemperatures(){
    let select = document.getElementById('gpt-temperatures');
@@ -195,7 +180,6 @@ class GPTMessage extends HTMLElement {
     constructor() {
         // Attach this element to the shadow dom
         super();
-
     }
     connectedCallback() {
         //const shadow = this.attachShadow({ mode: "open" });

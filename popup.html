@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-<head><script src="../assets/js/color-modes.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.111.3">
-    <title>Modals · Bootstrap v5.3</title>
+    <title>API Key</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/modals.css" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -83,6 +83,12 @@
       .bd-mode-toggle {
         z-index: 1500;
       }
+      .label-danger{
+        color: red;
+      }
+      .label-success{
+        color: blue;
+      }
     </style>
 
 
@@ -100,19 +106,32 @@
             </div>
 
             <div class="modal-body p-5 pt-0">
-                <form class="">
-                    <label id="gpt-key-success" class="success" style="display: none">Key Saved</label>
+                <form class="form-inline">
+                    <span id="gpt-key-success" class = "label label-success" style="display: none">API Key Saved</span>
+                    <span id="gpt-key-failure" class = "label label-danger" style="display: none">Unable to save key. Ensure the key is valid</span>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-3" id="gpt-key-value" placeholder="sk-dadsad" required>
-                        <label for="gpt-key-value">API Key</label>
+                        <label for="gpt-key-value">Set API Key</label>
                     </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-control rounded-3" name="engines" id="gpt-engines">
+                            <option value="">--Please choose an engine--</option>
+                        </select>
+                        <label for="gpt-engines">GPT Engines</label>
+                    </div>
+                    <!--<div class="form-floating mb-3">
+                        <select  class="form-control rounded-3" name="temperature" id="gpt-temperatures">
+                            <option value="">&#45;&#45;Please set GPT creativity&#45;&#45;</option>
+                        </select>
+                        <label for="gpt-temperatures">Set the creativity level</label>
+                    </div>-->
 
                     <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" id="gpt-key-submit" type="button">Save</button>
                     <small class="text-body-secondary">Your key is safe and will not be shared with anyone. It will be stored in your local machine.</small>
                     <p class="text-body-secondary"><a target="_blank"  href="https://platform.openai.com/account/api-keys">Get your API key from Open AI dashboard.</a> </p>
                     <hr class="my-4">
                     <h2 class="fs-5 fw-bold mb-3">For support or feedback</h2>
-                    <a href="mailto:support@learnym.com" target="_blank" class="btn btn-primary">Email Us</a>
+                    <a href="https://www.ainotemaker/support" target="_blank" class="btn btn-primary">Contact</a>
 
                 </form>
             </div>
