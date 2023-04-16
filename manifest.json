@@ -7,24 +7,9 @@
   "name": "AI NoteMaker",
   "content_scripts": [
     {
-      "matches": ["*://medium.com/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js","medium/content.js"],
-      "css": ["css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
-    },
-    {
-      "matches": ["*://*.linkedin.com/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js", "linkedin/content.js"],
-      "css": [ "css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
-    },
-    {
-      "matches": ["*://*.twitter.com/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js", "twitter/content.js"],
-      "css": [ "css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
-    },
-    {
-      "matches": ["*://*.reddit.com/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js", "reddit/content.js"],
-      "css": [ "css/gpt_content.css", "css/bootstrap.min.css", "css/key.css", "css/modals.css"]
+      "matches": ["*://*/*"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js"],
+      "css": ["css/gpt_content.css"]
     }
   ],
   "icons": {
@@ -44,5 +29,5 @@
     "default_title": "AI NoteMaker",
     "default_popup": "popup.html"
   },
-  "version": "0.001"
+  "version": "0.003"
 }

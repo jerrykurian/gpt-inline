@@ -4,43 +4,63 @@ $(window).on("load", function() {
 });
 
 async function handleTextEditor(targetTextEditor) {
-    let context = ''
-    let prompt = targetTextEditor.querySelectorAll(editableType).forEach(function(e){
-        // add a check to see if the text contains "prompt:"
-        let promptHighlighter = document.getElementsByClassName('gpt-highlight-border');
-        let currentTextHasPrompt = $(`${editor}`)[0].innerText.toLowerCase().includes("prompt:");
-        if((promptHighlighter===null || promptHighlighter.length===0) && currentTextHasPrompt){
-            updatePromptText(e)
-        }else{
-            // add the text to the context
-            context = e.innerText;
-            if(!currentTextHasPrompt){
-                removeHelper(e);
+    // Check if the targetTextEditor is a node of type "TEXTEDITOR"
+    // if not, return
+    if(targetTextEditor.nodeName !== "TEXTAREA"){
+        // Get textNodesUnder the targetTextEditor
+        let target = textNodesUnder(targetTextEditor);
+        // Check if the parent of target has a class of gpt-highlight-border
+        if(target !== null){
+            let pElement = target.parentNode;
+            let promptHighlighter = pElement.getElementsByClassName('gpt-highlight-border');
+            let currentTextHasPrompt = target.textContent.toLowerCase().includes("prompt:");
+            if((promptHighlighter===null || promptHighlighter.length===0) && currentTextHasPrompt){
+                ready(pElement)
+            }else{
+                // add the text to the context
+                context = e.innerText;
+                if(!currentTextHasPrompt){
+                    removeHelper(pElement);
+                }
             }
         }
-    })
+    }
 }
 
 function loadObserver() {
     // create a jquery css selector for identifying a node that has contenteditable="true"
     // DOMCharacterDataModified
-    $(document).on("DOMSubtreeModified", `${editor}`,
+    $(document).on("DOMSubtreeModified", '[contenteditable=true]',
+         function () {
+            handleTextEditor(this);
+    });
+    $(document).on("textchange", 'textarea',
          function () {
             handleTextEditor(this);
     });
 
-    $(document).on("keyup", `${editor}`, function(event){
-          var keycode = (event.keyCode ? event.keyCode : event.which);
-          if(keycode == '13'){
-            let target = textNodesUnder(event.target);
-            if(target !== null){
-                progress(target.parentNode);
-                handlePrompt(target);
-            }
-          }
+    $(document).on("keyup", '[contenteditable=true]', function(event){
+          handlePromptEntry(event, false);
+    });
+    $(document).on("keyup", 'textarea', function(event){
+          handlePromptEntry(event, true);
     });
 }
 
+function handlePromptEntry(event, isTextArea){
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if(keycode == '13'){
+    if(!isTextArea){
+        let target = textNodesUnder(event.target);
+        if(target !== null){
+            progress(target.parentNode);
+            handlePrompt(target, isTextArea);
+        }
+    }else{
+        handlePrompt(event.target, isTextArea);
+    }
+  }
+}
 function textNodesUnder(el){
   let searchText = 'prompt:';
   var n, a=[], walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null,false);
@@ -54,30 +74,31 @@ function textNodesUnder(el){
 
 
 function updatePromptText(target){
-    let targetTextNode = textNodesUnder(target)
-    if(targetTextNode !== null){
-        let tNode = textNodesUnder(target)
-        if(tNode !== null){
-            let pElement = tNode.parentNode;
-            ready(pElement);
-        }
-    }
+    let pElement = target.parentNode;
+    ready(pElement);
 }
-function setPromptResponse(contextText, target){
+function setPromptResponse(contextText, target, isTextArea){
     let pElement = target;
     let preText = contextText;
+    let textArea = isTextArea;
     let handler = function(status, message){
         if(status === "success"){
-           // add the message to the text editor
-           let finalText = `${preText} ${message}`;
-           pElement.innerHTML = finalText;
-           removeHelper(target);
+            // add the message to the text editor
+            let finalText = `${preText} ${message}`;
+            if(textArea){
+                pElement.value = finalText;
+            }else{
+                pElement.innerHTML = finalText;
+                removeHelper(target);
+            }
         }else{
            // showApiKeyModal();
-           let tNode = textNodesUnder(target)
-           if(tNode !== null){
-                error(tNode.parentNode);
-                // showErrorModal();
+           if(!isTextArea){
+               let tNode = textNodesUnder(target)
+               if(tNode !== null){
+                    error(tNode.parentNode);
+                    // showErrorModal();
+               }
            }
            // removeHelper();
         }
@@ -102,12 +123,17 @@ function showErrorModal(){
             });
 }
 
-function handlePrompt(target){
-    let text = target.textContent;
+function handlePrompt(target, isTextArea){
+    let text = '';
+    if(isTextArea){
+        text = target.value;
+    }else{
+        text = target.textContent;
+    }
     let indexOfPrompt = text.indexOf('prompt:');
     let contextText = text.substring(0, indexOfPrompt);
     let promptText = text.substring(indexOfPrompt + 7, text.length);
-    promptCompleter(contextText, promptText, setPromptResponse(contextText, target.parentNode));
+    promptCompleter(contextText, promptText, setPromptResponse(contextText, isTextArea? target: target.parentNode, isTextArea));
 }
 
 // Create a custom element called GPTHelper
