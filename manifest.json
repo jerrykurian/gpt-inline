@@ -8,8 +8,8 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js", "js/bootstrap.bundle.min.js","gpt-connector.js","common_content.js"],
-      "css": ["css/gpt_content.css"]
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","gpt-connector.js","common_content.js"],
+      "css": ["css/gpt_content.css", "css/bootstrap.min.css", "css/bootstrap-icons.css", "css/modals.css"]
     }
   ],
   "icons": {

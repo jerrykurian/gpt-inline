@@ -9,15 +9,19 @@ let openai_engine = "text-davinci-003"
 let temperature = 0.2;
 let max_tokens = 1000;
 
-function loadOpenAiModels(){
-    loadApiKey((key)=>{
-        chrome.runtime.sendMessage({ "type": "List Models", "apiKey": key });
-    });
-}
-
 loadApiKey((key)=>{
     apiKey = key;
 });
+
+function loadOpenAiModels(){
+   chrome.storage.local.get("gptEngine", function (data) {
+     let engine = data.gptEngine;
+     if(engine !== undefined){
+          openai_engine = engine;
+     }
+   });
+}
+
 // Add a function promptGenerator that handles the click event and calls openAi api to pass the prompt and generate response
 function promptCompleter(context, prompt, fn){
     if(callback === null){
@@ -132,21 +136,7 @@ function saveKey(){
   })
 }*/
 
-// add a function that will create options out of models and add them to the select element ID gpt-engines
-function addModelsToSelect(){
-    if(models !== null){
-        let select = document.getElementById('gpt-engines');
-        models.forEach((model)=>{
-            let option = document.createElement("option");
-            option.text = model.id;
-            option.value = model.id;
-            if(model.id === openai_engine){
-                option.selected = true;
-            }
-            select.add(option);
-        });
-    }
-}
+
 // add a function that will create options of temperatures
 function addTemperatures(){
    let select = document.getElementById('gpt-temperatures');
@@ -190,7 +180,6 @@ class GPTMessage extends HTMLElement {
     constructor() {
         // Attach this element to the shadow dom
         super();
-
     }
     connectedCallback() {
         //const shadow = this.attachShadow({ mode: "open" });

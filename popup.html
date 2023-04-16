@@ -105,13 +105,25 @@
             </div>
 
             <div class="modal-body p-5 pt-0">
-                <form class="">
+                <form class="form-inline">
                     <span id="gpt-key-success" class = "label label-success" style="display: none">API Key Saved</span>
                     <span id="gpt-key-failure" class = "label label-danger" style="display: none">Unable to save key. Ensure the key is valid</span>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-3" id="gpt-key-value" placeholder="sk-dadsad" required>
                         <label for="gpt-key-value">Set API Key</label>
                     </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-control rounded-3" name="engines" id="gpt-engines">
+                            <option value="">--Please choose an engine--</option>
+                        </select>
+                        <label for="gpt-engines">GPT Engines</label>
+                    </div>
+                    <!--<div class="form-floating mb-3">
+                        <select  class="form-control rounded-3" name="temperature" id="gpt-temperatures">
+                            <option value="">&#45;&#45;Please set GPT creativity&#45;&#45;</option>
+                        </select>
+                        <label for="gpt-temperatures">Set the creativity level</label>
+                    </div>-->
 
                     <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" id="gpt-key-submit" type="button">Save</button>
                     <small class="text-body-secondary">Your key is safe and will not be shared with anyone. It will be stored in your local machine.</small>
