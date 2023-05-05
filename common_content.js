@@ -81,11 +81,17 @@ function setPromptResponse(contextText, target, isTextArea){
                 pElement.value = finalText;
                 removeHelper(target, isTextArea);
             }else{
-                pElement.innerHTML = finalText;
+                pElement.innerText = finalText;
                 removeHelper(target, isTextArea);
             }
+            chrome.storage.local.set({"ainotemaker_error": {'message': ''}}).then(()=>{
+                console.log("error updated");
+            });
         }else{
            // showApiKeyModal();
+           chrome.storage.local.set({"ainotemaker_error": {'message': message}}).then(()=>{
+                console.log("error saved");
+            });
            if(!isTextArea){
                let tNode = textNodesUnder(target)
                if(tNode !== null){

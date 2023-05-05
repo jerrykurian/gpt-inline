@@ -22,7 +22,7 @@ async function handleTextEditor(targetTextEditor) {
                 ready(pElement)
             }else{
                 // add the text to the context
-                context = e.innerText;
+                //context = e.innerText;
                 if(!currentTextHasPrompt){
                     removeHelper(pElement);
                 }

@@ -22,12 +22,12 @@ function promptCompleter(context, prompt, fn){
                 fn('error', '');
             }else{
                 let engine = ainotemaker_data.gptEngine !== undefined ? ainotemaker_data.gptEngine: openai_engine;
-                handleCompletionResponse({status: "success",
-                    completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam`});
+                //handleCompletionResponse({status: "success",
+                //    completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam`});
                 // From withing the chrome extension extract the email ID of the logged in user using the identity API 
-                /*chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": ainotemaker_data.gptApiKey,
+                chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": ainotemaker_data.gptApiKey,
                 "premium": !FREE_SITE,
-                properties: {'temperature': temperature, 'engine': engine, 'max_tokens': max_tokens}});*/
+                properties: {'temperature': temperature, 'engine': engine, 'max_tokens': max_tokens}});
             }
         });
     }
@@ -65,7 +65,7 @@ function handleCompletionResponse(response){
     }
     callback = null;
 }
- q
+ 
 // Add a function that checks if apiKey is stored in the local storage
 // if the key is present then return it or else return null
 async function loadStorageData(fn){

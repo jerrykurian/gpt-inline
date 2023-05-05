@@ -3,20 +3,39 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "minimum_chrome_version": "92",
   "manifest_version": 3,
-  "name": "AI NoteMaker - Premium",
+  "name": "AI NoteMaker",
   "content_scripts": [
     {
+      "matches": ["*://*.twitter.com/*"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","license_free.js", "gpt-connector.js","prompt_entry_handler.js","common_content.js"],
+      "css": ["css/gpt_content.css"]
+    },
+    {
+      "matches": ["*://*.linkedin.com/*"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","license_free.js","gpt-connector.js","prompt_entry_handler.js","common_content.js"],
+      "css": ["css/gpt_content.css"]
+    },
+    {
+      "matches": ["*://*.github.com/*"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","license_free.js","gpt-connector.js","prompt_entry_handler.js","common_content.js"],
+      "css": ["css/gpt_content.css"]
+    },
+    {
       "matches": ["*://mail.google.com/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","gpt-connector.js","gmail/prompt_entry_handler.js","common_content.js"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","license_premium.js","gpt-connector.js","gmail/prompt_entry_handler.js","common_content.js"],
       "css": ["css/gpt_content.css"]
     },
     {
       "matches": ["<all_urls>"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","gpt-connector.js","prompt_entry_handler.js","common_content.js"],
+      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","license_premium.js","gpt-connector.js","prompt_entry_handler.js","common_content.js"],
       "css": ["css/gpt_content.css"],
       "exclude_matches": [
-        "*://mail.google.com/*"
+        "*://mail.google.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.github.com/*",
+        "*://*.twitter.com/*"
       ]
     }
   ],
@@ -24,11 +43,11 @@
     "128": "img/icon.png"
   },
   "permissions": [
-    "storage"
+    "storage", "identity", "identity.email"
   ],
   "web_accessible_resources": [
     {
-      "resources": ["/css/*", "/pages/*"],
+      "resources": ["/css/*", "/pages/*", "/js/firebase-compat.js" ],
       "matches": [ "*://*/*" ]
     }
   ],
@@ -37,5 +56,13 @@
     "default_title": "AI NoteMaker",
     "default_popup": "popup.html"
   },
-  "version": "0.2"
+  "oauth2": {
+    "client_id": "1072029803129-1gh5kpqijembds6aacc79819alc4c1jv.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "key": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAleLRfxQJ5X7SIJ21JTJRUvaaeNI/pHXLY9zeEbpdUDH4CmWIl2odC8ljqsTSzt9AP0JXr5DvN45WdvWyHnISDt3E2wn+pz5aGJrZ6PxJL6slzBVX7LUTCTaPHS+h+k1QZSbCtd6bO62LbJ7PThii/th91Z2MGpfO/mEnkfDVV1VgppGDf0aVvk8eTSoku0oqdf9HY7JmYh0IdtSd6I37Lyg0h2v4SlZJE6eoRfuJGBGvMgRxbjrGvlbP2PqyIZGU1GnU/qnWqCO1LAvZYCrDiwxpLIoWLZLl3y1duqijlkd/seCA394Gcyvpd6jy3BAEuT2CBWzUeXPwG6fU4JXOOQIDAQAB-----END PUBLIC KEY-----",
+  "version": "0.3"
 }
