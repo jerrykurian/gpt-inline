@@ -9,30 +9,24 @@ let openai_engine = "text-davinci-003"
 let temperature = 0.2;
 let max_tokens = 1000;
 
-loadApiKey((key)=>{
-    apiKey = key;
-});
-
-function loadOpenAiModels(){
-   chrome.storage.local.get("gptEngine", function (data) {
-     let engine = data.gptEngine;
-     if(engine !== undefined){
-          openai_engine = engine;
-     }
-   });
-}
-
 // Add a function promptGenerator that handles the click event and calls openAi api to pass the prompt and generate response
 function promptCompleter(context, prompt, fn){
     if(callback === null){
         callback = fn;
-        loadApiKey((key)=>{
+        loadStorageData((data)=>{
             currentContext = context;
             currentPrompt = prompt;
-            /*handleCompletionResponse({status: "success",
-                completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam`});*/
-            chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": key,
-               properties: {'temperature': temperature, 'engine': openai_engine, 'max_tokens': max_tokens}});
+            let ainotemaker_data = data.ainotemaker_data;
+            if(ainotemaker_data === undefined){
+                callback = null
+                fn('error', '');
+            }else{
+                let engine = ainotemaker_data.gptEngine !== undefined ? ainotemaker_data.gptEngine: openai_engine;
+                /*handleCompletionResponse({status: "success",
+                    completion: `The origins of the stock market can be traced back to the 1600s in Amsterdam`});*/
+                chrome.runtime.sendMessage({ "context": context, "prompt": prompt, "type": "Completion Request", "apiKey": ainotemaker_data.gptApiKey,
+                   properties: {'temperature': temperature, 'engine': engine, 'max_tokens': max_tokens}});
+            }
         });
     }
 }
@@ -72,15 +66,15 @@ function handleCompletionResponse(response){
 
 // Add a function that checks if apiKey is stored in the local storage
 // if the key is present then return it or else return null
-async function loadApiKey(fn){
-    chrome.storage.local.get("gptApiKey", function (data) {
-        fn(data.gptApiKey);
+async function loadStorageData(fn){
+    chrome.storage.local.get("ainotemaker_data", function (data) {
+        fn(data);
     });
 }
 let keyContentAdded = false;
 // 1. Add a function to load api key from local storage. If the key is not present, then popup the extension page and ask user to enter the key.
 function showApiKeyModal(){
-    loadApiKey((gptApiKey)=>{
+    loadStorageData((data)=>{
         //if(gptApiKey === undefined || gptApiKey === null){
         if(!keyContentAdded){
             fetch(chrome.runtime.getURL('/pages/set_key.html')).then(r => r.text()).then(html => {

@@ -1,21 +1,38 @@
 document.getElementById("gpt-key-submit").addEventListener("click", saveKey);
 
+let API_KEY = 'gptApiKey';
+let ENGINE = 'gptEngine';
 function saveKey(){
     document.getElementById('gpt-key-success').style.display = "none";
     document.getElementById('gpt-key-failure').style.display = "none";
     let key = document.getElementById('gpt-key-value').value;
     let engine = document.getElementById('gpt-engines').value;
+    if(engine === ''){
+        engine = openai_engine;
+    }
     if(!isCensored(key)){
-        chrome.storage.local.set({"gptApiKey": key}).then(()=>{
+        let ainotemaker_data = {'gptApiKey': key, 'gptEngine' : engine}
+        chrome.storage.local.set({"ainotemaker_data": ainotemaker_data}).then(()=>{
             console.log("Key saved");
-            chrome.storage.local.set({"gptEngine": engine}).then(()=>{
-                console.log("Engine saved");
-                document.getElementById('gpt-key-success').style.display = "block";
-             });
+            document.getElementById('gpt-key-success').style.display = "block";
+            openai_engine = engine;
         });
-
     }else{
-        document.getElementById('gpt-key-failure').style.display = "block";
+        chrome.storage.local.get("ainotemaker_data", function (data) {
+            let ainotemaker_data = data.ainotemaker_data;
+            let key = ainotemaker_data.gptApiKey;
+            if(key !== undefined){
+                let ainotemaker_data = {'gptApiKey': key, 'gptEngine' : engine}
+                chrome.storage.local.set({"ainotemaker_data": ainotemaker_data}).then(()=>{
+                    console.log("Key saved");
+                    openai_engine = engine;
+                    document.getElementById('gpt-key-success').style.display = "block";
+                });
+            }else{
+                document.getElementById('gpt-key-failure').style.display = "block";
+            }
+        })
+
     }
 
 }
@@ -49,28 +66,15 @@ function isCensored(str) {
     return asteriskCount >= strLength/2;
 }
 
-loadOpenAiModels();
+
 let openai_url = "https://api.openai.com/";
 let openai_engine = "text-davinci-003"
 
 // Add a function that checks if apiKey is stored in the local storage
 // if the key is present then return it or else return null
-async function loadApiKey(fn){
-    chrome.storage.local.get("gptApiKey", function (data) {
-        fn(data.gptApiKey);
-    });
-}
-
-function loadOpenAiModels(){
-    loadApiKey((key)=>{
-        chrome.storage.local.get("gptEngine", function (data) {
-            let engine = data.gptEngine;
-            if(engine !== undefined){
-                openai_engine = engine;
-            }
-            listModels(key, handleListModelsResponse);
-        });
-
+async function loadStorageData(fn){
+    chrome.storage.local.get("ainotemaker_data", function (data) {
+        fn(data);
     });
 }
 
@@ -98,15 +102,15 @@ async function listModels(apiKey, callBack){
 function handleListModelsResponse(response){
     if(response.status === "success"){
         console.log(response.models);
-        models = response.models;
-        addModelsToSelect();
+        let models = response.models;
+        addModelsToSelect(models);
     }else{
         console.log(response.message);
     }
 }
 
 // add a function that will create options out of models and add them to the select element ID gpt-engines
-function addModelsToSelect(){
+function addModelsToSelect(models){
     if(models !== null){
         let select = document.getElementById('gpt-engines');
         models.forEach((model)=>{
@@ -121,11 +125,22 @@ function addModelsToSelect(){
     }
 }
 
-chrome.storage.local.get("gptApiKey", function (data) {
+chrome.storage.local.get("ainotemaker_data", function (data) {
     console.log(data);
-    if(data.gptApiKey !== undefined){
-        document.getElementById('gpt-key-value').value = censorString(data.gptApiKey);
+    let ainotemaker_data = data.ainotemaker_data;
+    if(ainotemaker_data !== undefined && ainotemaker_data.gptApiKey){
+        let key = ainotemaker_data.gptApiKey;
+        document.getElementById('gpt-key-value').value = censorString(key);
+        if(key !== undefined){
+            openai_engine = ainotemaker_data.gptEngine;
+            listModels(key, handleListModelsResponse);
+        }else{
+            let models = [{id:openai_engine}];
+            addModelsToSelect(models);
+        }
     }else{
         document.getElementById('gpt-key-value').value = "";
+        let models = [{id:openai_engine}];
+        addModelsToSelect(models);
     }
 });

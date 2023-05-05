@@ -1,5 +1,4 @@
 $(window).on("load", function() {
-    loadOpenAiModels();
     loadObserver();
 });
 
@@ -29,11 +28,28 @@ function handlePromptEntry(event, isTextArea){
     if(!isTextArea){
         let target = textNodesUnder(event.target);
         if(target !== null){
-            progress(target.parentNode);
+            progress(target.parentNode, isTextArea);
             handlePrompt(target, isTextArea);
         }
     }else{
-        handlePrompt(event.target, isTextArea);
+        if(event.target.value.toLowerCase().includes('prompt:')){
+            progress(event.target, isTextArea);
+            handlePrompt(event.target, isTextArea);
+        }
+    }
+  }else{
+    if(isTextArea){
+        let tArea = event.target;
+        let promptHighlighterPresent = tArea.classList.contains('gpt-highlight-border');
+        let currentTextHasPrompt = tArea.value.toLowerCase().includes("prompt:");
+        if(!promptHighlighterPresent && currentTextHasPrompt){
+            // set tArea border left to solid 5 px and color to green
+            ready(tArea, isTextArea)
+        }else{
+            if(promptHighlighterPresent && !currentTextHasPrompt){
+                removeHelper(tArea, isTextArea)
+            }
+        }
     }
   }
 }
@@ -63,18 +79,21 @@ function setPromptResponse(contextText, target, isTextArea){
             let finalText = `${preText} ${message}`;
             if(textArea){
                 pElement.value = finalText;
+                removeHelper(target, isTextArea);
             }else{
                 pElement.innerHTML = finalText;
-                removeHelper(target);
+                removeHelper(target, isTextArea);
             }
         }else{
            // showApiKeyModal();
            if(!isTextArea){
                let tNode = textNodesUnder(target)
                if(tNode !== null){
-                    error(tNode.parentNode);
+                    error(tNode.parentNode, isTextArea);
                     // showErrorModal();
                }
+           }else{
+                error(target, isTextArea);
            }
            // removeHelper();
         }
@@ -106,10 +125,12 @@ function handlePrompt(target, isTextArea){
     }else{
         text = target.textContent;
     }
-    let indexOfPrompt = text.indexOf('prompt:');
-    let contextText = text.substring(0, indexOfPrompt);
-    let promptText = text.substring(indexOfPrompt + 7, text.length);
-    promptCompleter(contextText, promptText, setPromptResponse(contextText, isTextArea? target: target.parentNode, isTextArea));
+    if(text.toLowerCase().includes('prompt:')){
+        let indexOfPrompt = text.indexOf('prompt:');
+        let contextText = text.substring(0, indexOfPrompt);
+        let promptText = text.substring(indexOfPrompt + 7, text.length);
+        promptCompleter(contextText, promptText, setPromptResponse(contextText, isTextArea? target: target.parentNode, isTextArea));
+    }
 }
 
 // Create a custom element called GPTHelper
@@ -146,76 +167,98 @@ class GPTProgress extends HTMLElement {
 window.customElements.define('gpt-helper', GPTHelper);
 window.customElements.define('gpt-progress', GPTProgress);
 
-function removeHelper(target){
-    // check if target class list contains gpt-highlight-border
-    if(target.classList.contains('gpt-highlight-border')){
-        target.classList.remove('gpt-highlight-border');
-    }
-    // check if target class list contains gpt-animate
-    if(target.classList.contains('gpt-ready')){
-        target.classList.remove('gpt-ready');
-    }
-    // check if target class list contains gpt-animate
-    if(target.classList.contains('gpt-animate')){
-        target.classList.remove('gpt-animate');
-    }
-    // check if target class list contains gpt-error
-    if(target.classList.contains('gpt-error')){
-        target.classList.remove('gpt-error');
+function removeHelper(target, isTextArea = false){
+    if(!isTextArea){
+        // check if target class list contains gpt-highlight-border
+        if(target.classList.contains('gpt-highlight-border')){
+            target.classList.remove('gpt-highlight-border');
+        }
+        // check if target class list contains gpt-animate
+        if(target.classList.contains('gpt-ready')){
+            target.classList.remove('gpt-ready');
+        }
+        // check if target class list contains gpt-animate
+        if(target.classList.contains('gpt-animate')){
+            target.classList.remove('gpt-animate');
+        }
+        // check if target class list contains gpt-error
+        if(target.classList.contains('gpt-error')){
+            target.classList.remove('gpt-error');
+        }
+    }else{
+        target.style.borderLeft = target.style.borderBottom
+        target.classList.remove('gpt-highlight-border')
     }
 }
 
-function ready(target){
+function ready(target, isTextArea = false){
     // check if target class list contains gpt-highlight-border
-    if(!target.classList.contains('gpt-highlight-border')){
+    if(!isTextArea){
+         if(!target.classList.contains('gpt-highlight-border')){
+            target.classList.add('gpt-highlight-border');
+        }
+        // check if target class list contains gpt-animate
+        if(!target.classList.contains('gpt-ready')){
+            target.classList.add('gpt-ready');
+        }
+        // check if target class list contains gpt-animate
+        if(target.classList.contains('gpt-animate')){
+            target.classList.remove('gpt-animate');
+        }
+        // check if target class list contains gpt-error
+        if(target.classList.contains('gpt-error')){
+            target.classList.remove('gpt-error');
+        }
+    }else{
         target.classList.add('gpt-highlight-border');
-    }
-    // check if target class list contains gpt-animate
-    if(!target.classList.contains('gpt-ready')){
-        target.classList.add('gpt-ready');
-    }
-    // check if target class list contains gpt-animate
-    if(target.classList.contains('gpt-animate')){
-        target.classList.remove('gpt-animate');
-    }
-    // check if target class list contains gpt-error
-    if(target.classList.contains('gpt-error')){
-        target.classList.remove('gpt-error');
+        target.style.borderLeft = "5px solid rgb(69 90 3)"
     }
 }
-function progress(target){
-    // check if target class list contains gpt-highlight-border
-    if(!target.classList.contains('gpt-highlight-border')){
+function progress(target, isTextArea = false){
+    if(!isTextArea){
+        // check if target class list contains gpt-highlight-border
+        if(!target.classList.contains('gpt-highlight-border')){
+            target.classList.add('gpt-highlight-border');
+        }
+        // check if target class list contains gpt-animate
+        if(!target.classList.contains('gpt-animate')){
+            target.classList.add('gpt-animate');
+        }
+        // check if target class list contains gpt-animate
+        if(target.classList.contains('gpt-ready')){
+            target.classList.remove('gpt-ready');
+        }
+        // check if target class list contains gpt-error
+        if(target.classList.contains('gpt-error')){
+            target.classList.remove('gpt-error');
+        }
+    }else{
         target.classList.add('gpt-highlight-border');
-    }
-    // check if target class list contains gpt-animate
-    if(!target.classList.contains('gpt-animate')){
-        target.classList.add('gpt-animate');
-    }
-    // check if target class list contains gpt-animate
-    if(target.classList.contains('gpt-ready')){
-        target.classList.remove('gpt-ready');
-    }
-    // check if target class list contains gpt-error
-    if(target.classList.contains('gpt-error')){
-        target.classList.remove('gpt-error');
+        removeHelper(target, isTextArea)
+        target.style.borderLeft = "5px solid orange"
     }
 }
-function error(target){
-    // check if target class list contains gpt-highlight-border
-    if(!target.classList.contains('gpt-highlight-border')){
+function error(target, isTextArea){
+    if(!isTextArea){
+        // check if target class list contains gpt-highlight-border
+        if(!target.classList.contains('gpt-highlight-border')){
+            target.classList.add('gpt-highlight-border');
+        }
+        // check if target class list contains gpt-animate
+        if(!target.classList.contains('gpt-error')){
+            target.classList.add('gpt-error');
+        }
+        // check if target class list contains gpt-animate
+        if(target.classList.contains('gpt-animate')){
+            target.classList.remove('gpt-animate');
+        }
+        // check if target class list contains gpt-error
+        if(target.classList.contains('gpt-ready')){
+            target.classList.remove('gpt-ready');
+        }
+    }else{
         target.classList.add('gpt-highlight-border');
-    }
-    // check if target class list contains gpt-animate
-    if(!target.classList.contains('gpt-error')){
-        target.classList.add('gpt-error');
-    }
-    // check if target class list contains gpt-animate
-    if(target.classList.contains('gpt-animate')){
-        target.classList.remove('gpt-animate');
-    }
-    // check if target class list contains gpt-error
-    if(target.classList.contains('gpt-ready')){
-        target.classList.remove('gpt-ready');
+        removeHelper(target, isTextArea)
+        target.style.borderLeft = "5px solid red"
     }
 }
