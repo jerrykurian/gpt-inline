@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
                 executeOpenAiCompletion(response, sender)
             }else{
                 chrome.tabs.sendMessage(sender.tab.id, 
-                    {"type" : "Completion Response", "status": "error", "message": "User is not premium, Please signup at https://ainotemaker.com q"});
+                    {"type" : "Completion Response", "status": "error", "message": "User is not premium, Please signup at https://ainotemaker.com"});
             }
         }else{
             executeOpenAiCompletion(response, sender)

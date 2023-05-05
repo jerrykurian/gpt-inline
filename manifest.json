@@ -63,6 +63,5 @@
       "https://www.googleapis.com/auth/userinfo.profile"
     ]
   },
-  "key": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAleLRfxQJ5X7SIJ21JTJRUvaaeNI/pHXLY9zeEbpdUDH4CmWIl2odC8ljqsTSzt9AP0JXr5DvN45WdvWyHnISDt3E2wn+pz5aGJrZ6PxJL6slzBVX7LUTCTaPHS+h+k1QZSbCtd6bO62LbJ7PThii/th91Z2MGpfO/mEnkfDVV1VgppGDf0aVvk8eTSoku0oqdf9HY7JmYh0IdtSd6I37Lyg0h2v4SlZJE6eoRfuJGBGvMgRxbjrGvlbP2PqyIZGU1GnU/qnWqCO1LAvZYCrDiwxpLIoWLZLl3y1duqijlkd/seCA394Gcyvpd6jy3BAEuT2CBWzUeXPwG6fU4JXOOQIDAQAB-----END PUBLIC KEY-----",
-  "version": "0.3"
+  "version": "1.0"
 }
