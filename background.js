@@ -8,7 +8,6 @@ var config = {
     storageBucket: "ainotemaker-default-rtd.appspot.com"
 };
 firebase.initializeApp(config);
-checkEmail();
 
 console.log("Loading Background");
 let openai_url = "https://api.openai.com/";
@@ -17,12 +16,14 @@ chrome.runtime.onMessage.addListener(function (response, sender, sendResponse) {
     case "Completion Request":
         let isPremium = response.premium;
         if(isPremium){
-            if(premium_signed){
-                executeOpenAiCompletion(response, sender)
-            }else{
-                chrome.tabs.sendMessage(sender.tab.id, 
-                    {"type" : "Completion Response", "status": "error", "message": "User is not premium, Please signup at https://ainotemaker.com"});
-            }
+            checkEmail((premium_signed) => {
+                if(premium_signed){
+                    executeOpenAiCompletion(response, sender)
+                }else{
+                    chrome.tabs.sendMessage(sender.tab.id, 
+                        {"type" : "Completion Response", "status": "error", "message": "NOT_PREMIUM"});
+                }
+            });
         }else{
             executeOpenAiCompletion(response, sender)
         }
@@ -46,7 +47,7 @@ async function executeOpenAiCompletion(response, sender){
 }
 let premium_signed = false;
 // A function that takes email address as input and calls the firebase api to check if the email is present in the database
-async function checkEmail(){
+async function checkEmail(callback){
     chrome.identity.getProfileUserInfo(function(userInfo) {
         // get the email
         console.log(userInfo.email);
@@ -55,9 +56,9 @@ async function checkEmail(){
         let ref = db.ref("users");
         ref.orderByChild("email").equalTo(email).once("value", function(snapshot) {
             if(snapshot.exists()){
-                premium_signed = true
+               callback(true)
             }else{
-                premium_signed = false
+                callback(false)
             }
         });
     })

@@ -149,13 +149,19 @@ chrome.storage.local.get("ainotemaker_error", function (data) {
     console.log(data);
     let error = data.ainotemaker_error;
     if(error !== undefined && error.message !== ''){
-        let error_message_element = document.getElementById('error_message');
-        error_message_element.innerHTML = error.message;
-        error_message_element.style.display = "block";
-       
+        if(error.message === 'NOT_PREMIUM'){
+            let error_message_element = document.getElementById('need_premium');
+            error_message_element.style.display = "block";
+        }else{
+            let error_message_element = document.getElementById('error_message');
+            error_message_element.innerHTML = error.message;
+            error_message_element.style.display = "block";
+        }
     }else{
         let error_message_element = document.getElementById('error_message');
         error_message_element.innerHTML = '';
+        error_message_element.style.display = "none";
+        error_message_element = document.getElementById('need_premium');
         error_message_element.style.display = "none";
     }
 });
